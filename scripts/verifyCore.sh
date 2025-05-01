@@ -82,7 +82,7 @@ tail -n +2 "$DEPLOYED_CONTRACTS_FILE" | while IFS=, read -r CHAIN_ID ENV_NAME CO
     echo "   🔑 Using chain-specific verification key for chain ID $CHAIN_ID"
 
     # Build verification command
-    VERIFY_CMD="forge verify-contract --chain $CHAIN_ID --etherscan-api-key \"$VERIFY_KEY\" --watch --constructor-args \"\" $CONTRACT_ADDRESS $CONTRACT_PATH"
+    VERIFY_CMD="forge verify-contract --chain $CHAIN_ID --verifier blockscout --verifier-url \"$VERIFY_KEY\" --watch --constructor-args \"\" $CONTRACT_ADDRESS $CONTRACT_PATH"
 
     # Execute verification command
     echo "   📝 Executing verification with chain-specific key..."
