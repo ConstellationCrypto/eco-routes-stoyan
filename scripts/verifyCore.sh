@@ -24,7 +24,11 @@ if [ -z "$CHAIN_DATA_URL" ]; then
   echo "❌ Error: CHAIN_DATA_URL is not set in .env\!"
   exit 1
 fi
-CHAIN_JSON=$(curl -s "$CHAIN_DATA_URL")
+if [[ "$CHAIN_DATA_URL" == https* ]]; then
+    CHAIN_JSON=$(curl -s "$CHAIN_DATA_URL")
+else
+    CHAIN_JSON=$(cat "$CHAIN_DATA_URL")
+fi
 
 # Ensure chain data is pulled
 if [ -z "$CHAIN_JSON" ]; then

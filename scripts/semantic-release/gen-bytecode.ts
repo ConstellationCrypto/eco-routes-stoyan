@@ -254,7 +254,18 @@ export async function fetchDeployData(): Promise<string[]> {
     // Use native fetch API (available in Node.js v18+)
 
     // Fetch the data
-    const response = await fetch(CHAIN_DATA_URL)
+    let response: Response
+    if (CHAIN_DATA_URL.includes('https')) {
+      response = await fetch(CHAIN_DATA_URL)
+    } else {
+      // Read from file system
+      const fileContent = fs.readFileSync(CHAIN_DATA_URL, 'utf8')
+      response = new Response(fileContent, {
+        status: 200,
+        statusText: 'OK',
+        headers: { 'Content-Type': 'application/json' },
+      })
+    }
 
     if (!response.ok) {
       throw new Error(`HTTP error! Status: ${response.status}`)
@@ -272,7 +283,7 @@ export async function fetchDeployData(): Promise<string[]> {
     }
   } catch (error) {
     console.error('Error fetching or parsing deployment data:', error)
-    throw new Error(`Failed to fetch or parse deployment data from ${DEPLOY_DATA_URL}: ${(error as Error).message}`)
+    throw new Error(`Failed to fetch or parse deployment data from ${CHAIN_DATA_URL}: ${(error as Error).message}`)
   }
 }
 
